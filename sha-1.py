@@ -1,4 +1,3 @@
-
 def text2ASCII(text):
     return [code for code in text.encode('ascii')]
 
@@ -69,27 +68,31 @@ def bitOp4(B, C, D):
 
 def SHA1(text):
     ascii = text2ASCII(text)
-    print("to ascii \n %s"%(ascii))
+    print("to ascii \n%s"%(ascii))
 
     binary = ASCII2binary(ascii)
-    print("to binary \n %s"%(binary))
+    print("to binary \n%s"%(binary))
 
     bstr = "".join(binary)+"1"
     mod = mod512448(bstr)
-    print("pad until mod 512 == 448\n %s"%(mod))
+    print("pad until mod 512 == 448\n%s"%(mod))
 
     len_binary = length2binary(bstr)
-    print("length to binary\n %s"%(len_binary))
+    print("length to binary\n%s"%(len_binary))
 
     bstr = mod + len_binary
-    print("join and pad 1 and length \n %s"%(bstr))
+    print("join and pad 1 and length \n%s"%(bstr))
 
     print(len(bstr))
     chunks = splitChunk(bstr)
-    print("split chunks \n %s"%(chunks))
+    print("split chunks")
+    for i, chunk in enumerate(chunks):
+        print("chunk %d: %s"%(i, chunk))
 
     chunks = extendChunks(chunks)
-    print("extend chunks \n %s"%(chunks))
+    print("extend chunks")
+    for i, chunk in enumerate(chunks):
+        print("chunk %d: %s"%(i, chunk))
 
     h0 = "01100111010001010010001100000001"
     h1 = "11101111110011011010101110001001"
@@ -104,11 +107,11 @@ def SHA1(text):
     for i, chunk in enumerate(chunks):
         if i < 20:
             F, K = bitOp1(B, C, D)
-        if i < 40:
+        elif i < 40:
             F, K = bitOp2(B, C, D)
-        if i < 60:
+        elif i < 60:
             F, K = bitOp3(B, C, D)
-        if i < 80:
+        elif i < 80:
             F, K = bitOp4(B, C, D)
         # (A left rotate 5) + F + E + K + (the current word)
         alrt = leftRotate(A, 5)
