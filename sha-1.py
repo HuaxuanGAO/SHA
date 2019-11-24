@@ -44,13 +44,14 @@ def extendChunks(chunks):
 
 def bitOp1(B, C, D):
     # (B AND C) OR (!B AND D)
-    F = (int(B,2) & int(C,2)) | (not int(B,2) & int(D,2))
+    F = (int(B,2) & int(C,2)) | ( int(negate(B),2) & int(D,2))
     K = "01011010100000100111100110011001"
     return int2bstr(F), K
 
 def bitOp2(B, C, D):
     # B XOR C XOR D
-    F = int(B,2) ^ int(C,2) ^ int(B,2) ^ int(D,2)
+    print("B XOR C %s"%(int2bstr(int(B,2)^int(C,2))))
+    F = int(B,2) ^ int(C,2) ^ int(D,2)
     K = "01101110110110011110101110100001"
     return int2bstr(F), K
 
@@ -62,7 +63,7 @@ def bitOp3(B, C, D):
 
 def bitOp4(B, C, D):
     # B XOR C XOR D
-    F = int(B,2) ^ int(C,2) ^ int(B,2) ^ int(D,2)
+    F = int(B,2) ^ int(C,2) ^ int(D,2)
     K = "11001010011000101100000111010110"
     return int2bstr(F), K
 
@@ -115,6 +116,9 @@ def SHA1(text):
             F, K = bitOp4(B, C, D)
         # (A left rotate 5) + F + E + K + (the current word)
         alrt = leftRotate(A, 5)
+        print("K %s"%(K))
+        print("ALROT5 %s"%(alrt))
+        print("F %s"%(F))
         temp = int2bstr(int(alrt,2)+ int(F,2) +int(E,2)+int(K,2)+int(chunk,2))
         # keep right most 32
         temp = temp[-32:]
@@ -124,19 +128,30 @@ def SHA1(text):
         C = leftRotate(B, 30)
         B = A
         A = temp
+        print("A %s"%A)
+        print("B %s"%B)
+        print("C %s"%C)
+        print("D %s"%D)
+        print("E %s"%E)
 
-    h0 = h0 + A
-    h1 = h1 + B
-    h2 = h2 + C
-    h3 = h3 + D
-    h4 = h4 + E
+
+    h0 = int2bstr(int(h0,2)+int(A,2))
+    print("h0 %s"%(h0))
+    h1 = int2bstr(int(h1,2)+int(B,2))
+    print("h1 %s"%(h1))
+    h2 = int2bstr(int(h2,2)+int(C,2))
+    print("h2 %s"%(h2))
+    h3 = int2bstr(int(h3,2)+int(D,2))
+    print("h3 %s"%(h3))
+    h4 = int2bstr(int(h4,2)+int(E,2))
+    print("h4 %s"%(h4))
 
     return '{:08x}'.format(int(h0[-32:], 2)) + '{:08x}'.format(int(h1[-32:], 2)) + '{:08x}'.format(int(h2[:-32], 2))\
-         + '{:08x}'.format(int(h3[:-32], 2)) + '{:08x}'.format(int(h4[-32:], 2))
+         + '{:08x}'.format(int(h3[-32:], 2)) + '{:08x}'.format(int(h4[-32:], 2))
 
 text = "this is great!"
 sha = SHA1(text)
 print(text)
 print(sha)
 
-# 98bb2b7d040eae5b98badcfe103254768f2a2e86
+# 1deef8461ffb4b4400000001e3813d17a715aa3a
